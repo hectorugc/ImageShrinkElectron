@@ -8,12 +8,18 @@ const isLinux = process.platform === "linux" ? true : false;
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
 		title: "ImageShrink",
-		width: 1000,
+		width: isDev ? 800 : 500,
 		height: 600,
 		icon: "./assets/icons/Icon_256x256.png",
 		backgroundColor: "red",
-		resizable: isDev,
+		resizable: isDev ? true : false,
+		webPreferences: {
+			nodeIntegration: true,
+		},
 	});
+	if (isDev) {
+		mainWindow.webContents.openDevTools();
+	}
 
 	mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 	//same way but different method
