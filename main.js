@@ -10,6 +10,7 @@ const {
 	shell,
 } = require("electron");
 const imagemin = require("imagemin");
+const log = require("electron-log");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminpngQuant = require("imagemin-pngquant");
 const slash = require("slash");
@@ -17,7 +18,7 @@ const { default: imageminPngquant } = require("imagemin-pngquant");
 let mainWindow;
 let aboutWindow;
 //set enviroment
-process.env.NODE_ENV = "development";
+process.env.NODE_ENV = "production";
 const isDev = process.env.NODE_ENV !== "production" ? true : false;
 const isLinux = process.platform === "linux" ? true : false;
 function createMainWindow() {
@@ -116,10 +117,13 @@ async function shrinkImage({ imgPath, quality, dest }) {
 				}),
 			],
 		});
-		console.log(files);
+		//console.log(files);
+		log.info(files);
 		shell.openPath(dest);
+		mainWindow.webContents.send("image:done");
 	} catch (err) {
-		console.log(err);
+		//console.log(err);
+		log.error(err);
 	}
 }
 app.on("window-all-closed", () => {
